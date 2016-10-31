@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Marvel Comics</string>
+
+    <!-- Titles -->
+    <string name="activity_title_details">Comic Book details</string>
+    <string name="activity_title_main">Marvel\'s first 100</string>
+
+    <!-- Retry -->
+    <string name="retry_button">Retry</string>
+    <string name="retry_message">Ooops... something went wrong!</string>
+    <string name="no_network">Network connection not available</string>
+
+</resources>

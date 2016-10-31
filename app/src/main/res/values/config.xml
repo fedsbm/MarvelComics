@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="base_url">https://gateway.marvel.com/v1/</string>
+    <string name="marvel_public_key">54306733de0f5cd1418aa05a85fa062a</string>
+    <string name="marvel_private_key">5de1fabcda2ea08912bd8b09bca4321f50563655</string>
+
+</resources>
