@@ -4,6 +4,7 @@
     <!-- Titles -->
     <string name="activity_title_details">Comic Book details</string>
     <string name="activity_title_main">Marvel - Stan Lee\'s Comics</string>
+    <string name="activity_title_budget">Comic\'s budget</string>
 
     <!-- Retry -->
     <string name="retry_button">Retry</string>
@@ -16,5 +17,20 @@
     <string name="comic_details_price">Price: $%s</string>
     <string name="comic_details_pages">Pages: %s</string>
     <string name="comic_details_authors">Authors: %s</string>
+
+    <!-- Shared Elements -->
+    <string name="shared_element_fab">fab_button</string>
+    <string name="shared_element_cover_image">shared_image</string>
+
+    <!-- Budget Dialog -->
+    <string name="budget_dialog_ok">OK</string>
+    <string name="budget_dialog_price_hint">0.00</string>
+    <string name="budget_dialog_currency">$</string>
+    <string name="budget_dialog_title">Budget</string>
+
+    <!-- Budget Activity -->
+    <string name="budget_money">Budget:  $%s</string>
+    <string name="budget_comics_number">Number of comics:  %d</string>
+    <string name="budget_pages">Number of pages:  %d (summed)</string>
 
 </resources>

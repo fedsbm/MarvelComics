@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -41,7 +40,9 @@ public class ComicBookHolder extends RecyclerView.ViewHolder implements View.OnC
     public void onClick(View v) {
         Context context = v.getContext();
         ActivityOptionsCompat options = ActivityOptionsCompat.
-                makeSceneTransitionAnimation((Activity) context, mCoverImageView, "shared_image");
+                makeSceneTransitionAnimation((Activity) context,
+                        mCoverImageView,
+                        context.getString(R.string.shared_element_cover_image));
         ActivityCompat.startActivity((Activity) context,
                 ComicBookDetailsActivity.getNewIntent(context, mComicBookData),
                 options.toBundle());

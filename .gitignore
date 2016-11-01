@@ -6,3 +6,10 @@
 .DS_Store
 /build
 /captures
+/.idea
+/imgs
+.idea/vcs.xml
+.idea/.name
+.idea/compiler.xml
+.idea/copyright/profiles_settings.xml
+.idea/vcs.xml

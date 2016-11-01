@@ -17,7 +17,7 @@ import softs.org.uk.marvelcomics.viewholder.ComicBookHolder;
  * Created by Fernando Bonet on 30/10/2016.
  */
 public class ComicsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private static final int VIEW_TYPE_COMIC = 0;
+    public static final int VIEW_TYPE_COMIC = 0;
 
     private List<ComicBookData> mItems;
 

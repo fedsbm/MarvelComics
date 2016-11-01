@@ -5,8 +5,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.IntentCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +19,8 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import retrofit2.Call;
@@ -29,6 +32,7 @@ import softs.org.uk.marvelcomics.activity.base.BaseActivity;
 import softs.org.uk.marvelcomics.adapter.ComicsListAdapter;
 import softs.org.uk.marvelcomics.api.CustomRetrofit;
 import softs.org.uk.marvelcomics.api.MarvelAPI;
+import softs.org.uk.marvelcomics.fragment.BudgetDialogFragment;
 import softs.org.uk.marvelcomics.model.api.ComicsRequestData;
 import softs.org.uk.marvelcomics.model.object.ComicBookData;
 import softs.org.uk.marvelcomics.utils.ConnectionUtils;
@@ -46,7 +50,8 @@ public class MainActivity extends BaseActivity implements Callback<ComicsRequest
     private Button mRetryButton;
     private RelativeLayout mEmptyResult;
     private LinearLayoutManager mLayoutManager;
-    private List<ComicBookData> mItems = new ArrayList<>();
+    private ArrayList<ComicBookData> mItems = new ArrayList<>();
+    private ArrayList<ComicBookData> mSortedItems = new ArrayList<>();
     private ComicsListAdapter mAdapter;
     private RecyclerView mComicsRecyclerView;
     private long mTimestamp;
@@ -78,6 +83,19 @@ public class MainActivity extends BaseActivity implements Callback<ComicsRequest
             @Override
             public void onClick(View v) {
                 loadContent();
+            }
+        });
+        mBudgetFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityOptionsCompat options = ActivityOptionsCompat.
+                        makeSceneTransitionAnimation(MainActivity.this, mBudgetFab, getString(R.string.shared_element_fab));
+
+                BudgetDialogFragment fragment = BudgetDialogFragment.create(mItems);
+
+                fragment.show(getSupportFragmentManager(), null);
+
+
             }
         });
     }
@@ -171,14 +189,14 @@ public class MainActivity extends BaseActivity implements Callback<ComicsRequest
         }
     }
 
-    private void setupRecycleView(List<ComicBookData> comicBookList) {
+    private void setupRecycleView(ArrayList<ComicBookData> comicBookList) {
         showContent();
+        mItems = comicBookList;
         mLayoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
         mComicsRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new ComicsListAdapter(comicBookList);
+        mAdapter = new ComicsListAdapter(mItems);
         mComicsRecyclerView.setAdapter(mAdapter);
     }
-
 
 }
 
