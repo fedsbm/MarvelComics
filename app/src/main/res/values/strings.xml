@@ -3,11 +3,18 @@
 
     <!-- Titles -->
     <string name="activity_title_details">Comic Book details</string>
-    <string name="activity_title_main">Marvel\'s first 100</string>
+    <string name="activity_title_main">Marvel - Stan Lee\'s Comics</string>
 
     <!-- Retry -->
     <string name="retry_button">Retry</string>
     <string name="retry_message">Ooops... something went wrong!</string>
     <string name="no_network">Network connection not available</string>
+
+    <!-- Comic Details -->
+    <string name="comic_details_summary">Summary</string>
+    <string name="comic_details_toolbar">Comic Book #%d</string>
+    <string name="comic_details_price">Price: $%s</string>
+    <string name="comic_details_pages">Pages: %s</string>
+    <string name="comic_details_authors">Authors: %s</string>
 
 </resources>

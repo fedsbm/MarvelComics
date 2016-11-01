@@ -29,7 +29,6 @@
 
         <activity
             android:name=".activity.ComicBookDetailsActivity"
-            android:label="@string/activity_title_details"
             android:screenOrientation="portrait" />
     </application>
 

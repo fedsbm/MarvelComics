@@ -34,7 +34,8 @@
                 <ImageView
                     android:id="@+id/row_comic_book_image_view"
                     android:layout_width="match_parent"
-                    android:layout_height="225dp" />
+                    android:layout_height="225dp"
+                    android:transitionName="shared_image" />
             </FrameLayout>
 
 

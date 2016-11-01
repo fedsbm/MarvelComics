@@ -25,6 +25,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import softs.org.uk.marvelcomics.R;
+import softs.org.uk.marvelcomics.activity.base.BaseActivity;
 import softs.org.uk.marvelcomics.adapter.ComicsListAdapter;
 import softs.org.uk.marvelcomics.api.CustomRetrofit;
 import softs.org.uk.marvelcomics.api.MarvelAPI;
@@ -32,7 +33,7 @@ import softs.org.uk.marvelcomics.model.api.ComicsRequestData;
 import softs.org.uk.marvelcomics.model.object.ComicBookData;
 import softs.org.uk.marvelcomics.utils.ConnectionUtils;
 
-public class MainActivity extends AppCompatActivity implements Callback<ComicsRequestData> {
+public class MainActivity extends BaseActivity implements Callback<ComicsRequestData> {
 
     public static final String LAST_TIME_STAMP = "LAST_TIME_STAMP";
     public static final String LAST_HASH = "LAST_HASH";
@@ -59,9 +60,13 @@ public class MainActivity extends AppCompatActivity implements Callback<ComicsRe
     }
 
     @Override
+    protected int getLayoutResource() {
+        return R.layout.activity_main;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
         mSharedPreferences = this.getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
         setViewReferences();
         setListeners();
