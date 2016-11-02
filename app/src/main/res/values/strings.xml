@@ -30,6 +30,7 @@
 
     <!-- Budget Activity -->
     <string name="budget_money">Budget:  $%s</string>
+    <string name="budget_comics_total_cost">Total cost:  $%s</string>
     <string name="budget_comics_number">Number of comics:  %d</string>
     <string name="budget_pages">Number of pages:  %d (summed)</string>
 

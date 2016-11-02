@@ -64,7 +64,7 @@ public class ComicsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
 
-    private void setAnimation(View viewToAnimate, int position) {
+    protected void setAnimation(View viewToAnimate, int position) {
         int duration;
         if (isEven(position)) {
             duration = 200;

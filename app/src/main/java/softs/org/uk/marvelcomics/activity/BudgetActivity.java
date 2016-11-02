@@ -28,6 +28,7 @@ public class BudgetActivity extends BaseActivity {
     private TextView mMoneyTextView;
     private TextView mComicsTextView;
     private TextView mPagesTextView;
+    private TextView mTotalCostTextView;
 
 
     public static Intent getNewIntent(Context context, float budget, ArrayList<ComicBookData> comicBookData) {
@@ -65,6 +66,7 @@ public class BudgetActivity extends BaseActivity {
         mMoneyTextView = (TextView) findViewById(R.id.budget_money_text_view);
         mComicsTextView = (TextView) findViewById(R.id.budget_comics_text_view);
         mPagesTextView = (TextView) findViewById(R.id.budget_pages_text_view);
+        mTotalCostTextView = (TextView) findViewById(R.id.budget_total_cost_text_view);
     }
 
     private void setupRecycleView(ArrayList<ComicBookData> comicBookList) {
@@ -78,9 +80,13 @@ public class BudgetActivity extends BaseActivity {
     public void setTexts(ArrayList<ComicBookData> comicBookList) {
         mComicsTextView.setText(getString(R.string.budget_comics_number, comicBookList.size()));
         int pages = 0;
+        float totalCost = 0;
         for (ComicBookData comicBookData : comicBookList) {
             pages = pages + comicBookData.pageCount;
+            totalCost = totalCost + comicBookData.prices.get(0).price;
         }
         mPagesTextView.setText(getString(R.string.budget_pages, pages));
+        String money = String.format("%.2f", totalCost);
+        mTotalCostTextView.setText(getString(R.string.budget_comics_total_cost, money));
     }
 }

@@ -1,12 +1,15 @@
 package softs.org.uk.marvelcomics.fragment;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -51,7 +54,17 @@ public class BudgetDialogFragment extends AppCompatDialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setStyle(DialogFragment.STYLE_NO_TITLE, 0);
         loadSortedComics();
+    }
+
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+
+        // request a window without the title
+        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        return dialog;
     }
 
     private void setViewReferences(View view) {
@@ -70,6 +83,7 @@ public class BudgetDialogFragment extends AppCompatDialogFragment {
                 startActivity(BudgetActivity.getNewIntent(v.getContext(),
                         getBudget(),
                         mAffordableComicsData));
+                dismiss();
             }
         });
     }
