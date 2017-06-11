@@ -11,12 +11,11 @@ import softs.org.uk.marvelcomics.model.api.ComicsRequestData;
  * Created by Fernando Bonet on 30/10/2016.
  */
 public interface MarvelAPI {
-    @Headers("Cache-Control: max-age=86400")
-    @GET("public/comics")
+
+    @GET("v1/public/comics")
     Call<ComicsRequestData> loadComics(@Query("creators") int creators,
                                        @Query("limit") int limit,
                                        @Query("apikey") String apikey,
                                        @Query("hash") String hash,
-                                       @Query("ts") long ts);
-
+                                       @Query("ts") String ts);
 }

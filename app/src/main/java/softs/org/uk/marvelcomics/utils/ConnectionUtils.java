@@ -7,6 +7,9 @@ import android.net.NetworkInfo;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import softs.org.uk.marvelcomics.R;
 
@@ -24,8 +27,8 @@ public class ConnectionUtils {
         return networkInfo.isConnectedOrConnecting();
     }
 
-    public static String generateMD5Hash(Context context, long timestamp) {
-        String rawHash = timestamp + context.getString(R.string.marvel_private_key) + context.getString(R.string.marvel_public_key);
+    public static String generateMD5Hash(Context context) {
+        String rawHash = getTimestamp() + context.getString(R.string.marvel_private_key) + context.getString(R.string.marvel_public_key);
         return stringToMD5(rawHash);
     }
 
@@ -41,5 +44,10 @@ public class ConnectionUtils {
         messageDigest.update(string.getBytes(), 0, string.length());
         String hash = new BigInteger(1, messageDigest.digest()).toString(16);
         return hash;
+    }
+
+    public static String getTimestamp() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
+        return dateFormat.format(new Date());
     }
 }

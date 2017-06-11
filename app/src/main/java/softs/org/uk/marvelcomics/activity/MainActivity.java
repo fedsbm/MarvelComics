@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.IntentCompat;
 import android.support.v7.widget.GridLayoutManager;
@@ -19,19 +18,14 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 import softs.org.uk.marvelcomics.R;
 import softs.org.uk.marvelcomics.activity.base.BaseActivity;
 import softs.org.uk.marvelcomics.adapter.ComicsListAdapter;
-import softs.org.uk.marvelcomics.api.CustomRetrofit;
-import softs.org.uk.marvelcomics.api.MarvelAPI;
+import softs.org.uk.marvelcomics.api.MarvelRestClient;
 import softs.org.uk.marvelcomics.fragment.BudgetDialogFragment;
 import softs.org.uk.marvelcomics.model.api.ComicsRequestData;
 import softs.org.uk.marvelcomics.model.object.ComicBookData;
@@ -39,22 +33,20 @@ import softs.org.uk.marvelcomics.utils.ConnectionUtils;
 
 public class MainActivity extends BaseActivity implements Callback<ComicsRequestData> {
 
-    public static final String LAST_TIME_STAMP = "LAST_TIME_STAMP";
-    public static final String LAST_HASH = "LAST_HASH";
     private static final String TAG = MainActivity.class.getSimpleName();
+    public static final int LIMIT = 100;
+    public static final int STAN_LEE = 30;
 
-    private SharedPreferences mSharedPreferences;
     private ProgressBar mProgressBar;
     private FrameLayout mContentLinearLayout;
     private FloatingActionButton mBudgetFab;
     private Button mRetryButton;
     private RelativeLayout mEmptyResult;
     private LinearLayoutManager mLayoutManager;
-    private ArrayList<ComicBookData> mItems = new ArrayList<>();
+    private ArrayList<ComicBookData> mDataSet = new ArrayList<>();
     private ArrayList<ComicBookData> mSortedItems = new ArrayList<>();
     private ComicsListAdapter mAdapter;
     private RecyclerView mComicsRecyclerView;
-    private long mTimestamp;
 
     public static Intent getNewIntent(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
@@ -72,7 +64,6 @@ public class MainActivity extends BaseActivity implements Callback<ComicsRequest
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mSharedPreferences = this.getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
         setViewReferences();
         setListeners();
         loadContent();
@@ -91,7 +82,7 @@ public class MainActivity extends BaseActivity implements Callback<ComicsRequest
                 ActivityOptionsCompat options = ActivityOptionsCompat.
                         makeSceneTransitionAnimation(MainActivity.this, mBudgetFab, getString(R.string.shared_element_fab));
 
-                BudgetDialogFragment fragment = BudgetDialogFragment.create(mItems);
+                BudgetDialogFragment fragment = BudgetDialogFragment.create(mDataSet);
 
                 fragment.show(getSupportFragmentManager(), null);
 
@@ -132,69 +123,45 @@ public class MainActivity extends BaseActivity implements Callback<ComicsRequest
 
     private void loadContent() {
         setLoading();
-        mTimestamp = System.currentTimeMillis();
         retrieveComicsData();
     }
 
     private void retrieveComicsData() {
-        final int creator = 30;                             //Stan Lee
-        final int limit = 100;                              //100 Comics
 
         final String apiKey = getString(R.string.marvel_public_key);
-        final String hash = ConnectionUtils.generateMD5Hash(this, mTimestamp);
+        final String hash = ConnectionUtils.generateMD5Hash(this);
 
-        Retrofit retrofit = CustomRetrofit.getNewInstance(this);
-
-        MarvelAPI marvelAPI = retrofit.create(MarvelAPI.class);
-
-        Call<ComicsRequestData> call = marvelAPI.loadComics(creator, limit, apiKey, hash, mTimestamp);
+        Call<ComicsRequestData> call =
+                MarvelRestClient
+                        .getApiService()
+                        .loadComics(STAN_LEE, LIMIT, apiKey, hash, ConnectionUtils.getTimestamp());
 
         call.enqueue(this);
     }
-
 
     @Override
     public void onResponse(Call<ComicsRequestData> call, Response<ComicsRequestData> response) {
         if (response.body() != null) {
             Log.d(TAG, "Response: " + response.body().data.results.size());
-            if (ConnectionUtils.isNetworkConnectionAvailable(this)) {
-                mSharedPreferences.edit().putLong(LAST_TIME_STAMP, mTimestamp).commit();
-                mSharedPreferences.edit().putString(LAST_HASH, ConnectionUtils.generateMD5Hash(this, mTimestamp)).commit();
-            }
-            setupRecycleView(response.body().data.results);
+            mDataSet = response.body().data.results;
+            setupRecycleView();
             showContent();
         } else {
-            long lastWorkingTimeStamp = mSharedPreferences.getLong(LAST_TIME_STAMP, 0);
-            if (lastWorkingTimeStamp > 0 && lastWorkingTimeStamp != mTimestamp) {
-                Log.i(TAG, "Warning: Retrieving cached data");
-                mTimestamp = lastWorkingTimeStamp;
-                retrieveComicsData();
-            } else {
-                Log.d(TAG, "Error: Empty comics result");
-                showEmptyResult();
-            }
+            Log.d(TAG, "Error: Empty comics result");
+            showEmptyResult();
         }
     }
 
     @Override
     public void onFailure(Call<ComicsRequestData> call, Throwable t) {
-        long lastWorkingTimeStamp = mSharedPreferences.getLong(LAST_TIME_STAMP, 0);
-        if (lastWorkingTimeStamp > 0 && lastWorkingTimeStamp != mTimestamp) {
-            Log.i(TAG, "Warning: Retrieving cached data");
-            mTimestamp = lastWorkingTimeStamp;
-            retrieveComicsData();
-        } else {
-            Log.d(TAG, "Error: " + t.getMessage());
-            showEmptyResult();
-        }
+        Log.d(TAG, "Error: " + t.getMessage());
+        showEmptyResult();
     }
 
-    private void setupRecycleView(ArrayList<ComicBookData> comicBookList) {
-        showContent();
-        mItems = comicBookList;
+    private void setupRecycleView() {
         mLayoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
         mComicsRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new ComicsListAdapter(mItems);
+        mAdapter = new ComicsListAdapter(mDataSet);
         mComicsRecyclerView.setAdapter(mAdapter);
     }
 
